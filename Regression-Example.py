@@ -26,7 +26,6 @@ my_data = pd.concat([x_df, y_df], axis=1)
 
 #plot a small sample of 250 values of the data (otherwise Kernel might crash)
 my_data.sample(n=250).plot(kind='scatter', x='X Data', y='Y')
-plt.show()
 
 #now let's tensorflow figure out the line
 
@@ -59,11 +58,12 @@ with tf.Session() as sess:
 
     sess.run(init)
 
-    #feeding 1000 batches with 8 values each batch
+    #feeding 1000 batches with 8 corresponing data points each batch
     batches = 1000 #changing this gives more or less correct result
 
     for i in range(batches):
         
+        #take random values from the data
         rand_ind = np.random.randint(len(x_data), size=batch_size)
 
         feed = {xph:x_data[rand_ind], yph:y_true[rand_ind]}
@@ -73,13 +73,14 @@ with tf.Session() as sess:
     model_m, model_b = sess.run([m,b])
 
 model_m #print model m, this should be close to 0.5
+model_b #should be close to 5
 
 #plot
-
-x_hat = x_data*model_m + model_b
+y_hat = x_data*model_m + model_b
 
 my_data.sample(250).plot(kind='scatter', x='X Data', y='Y')
 plt.plot(x_data, y_hat, 'r')
+plt.show()
 
 
 
